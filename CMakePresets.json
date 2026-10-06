@@ -1,0 +1,88 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "base-config",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
+      "name": "GCC",
+      "hidden": true,
+      "inherits": ["base-config"],
+      "toolchainFile": "${sourceDir}/cmake/toolchain-gcc.cmake"
+    },
+    {
+      "name": "LLVM",
+      "hidden": true,
+      "inherits": ["base-config"],
+      "toolchainFile": "${sourceDir}/cmake/toolchain-llvm.cmake"
+    },
+    {
+      "name": "ICX",
+      "hidden": true,
+      "inherits": ["base-config"],
+      "toolchainFile": "${sourceDir}/cmake/toolchain-icx.cmake"
+    },
+    {
+      "name": "type-debug",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "type-release",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "Release_GCC",
+      "inherits": ["GCC", "type-release"]
+    },
+    {
+      "name": "Debug_GCC",
+      "inherits": ["GCC", "type-debug"]
+    },
+    {
+      "name": "Release_LLVM",
+      "inherits": ["LLVM", "type-release"]
+    },
+    {
+      "name": "Debug_LLVM",
+      "inherits": ["LLVM", "type-debug"]
+    },
+    {
+      "name": "Release_ICX",
+      "inherits": ["ICX", "type-release"]
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "Release GCC",
+      "configurePreset": "Release_GCC"
+    },
+    {
+      "name": "Debug GCC",
+      "configurePreset": "Debug_GCC"
+    },
+    {
+      "name": "Release LLVM",
+      "configurePreset": "Release_LLVM"
+    },
+    {
+      "name": "Debug LLVM",
+      "configurePreset": "Debug_LLVM"
+    },
+    {
+      "name": "Release ICX",
+      "configurePreset": "Release_ICX"
+    }
+  ]
+}
