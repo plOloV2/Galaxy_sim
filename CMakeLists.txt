@@ -14,12 +14,21 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS   ON)
 # Sources
 set(sources_SRCS
     src/main.c
+    src/create_StarData.c
 )
 
 # Include directories
 set(include_DIRS
     inc
 )
+
+include(FetchContent)
+FetchContent_Declare(
+    nXoshiro256
+    GIT_REPOSITORY https://github.com/plOloV2/nXoshiro256
+    GIT_TAG        main
+)
+FetchContent_MakeAvailable(nXoshiro256)
 
 # App version check
 add_custom_target(
@@ -37,10 +46,17 @@ add_custom_target(
 # Create an executable object type
 add_executable(${CMAKE_PROJECT_NAME} ${sources_SRCS})
 
+# Link the fetched library to your executable
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE nXoshiro256)
+
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE 
     ${include_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR} 
+)
+
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
 # Error flags
@@ -49,6 +65,7 @@ set(COMMON_FLAGS -Wall -Wextra -Werror -pipe)
 # Ensures the version header is generated before compilation
 add_dependencies(${CMAKE_PROJECT_NAME} GenerateVersionHeader)
 
+# LTO support check for release version 
 include(CheckIPOSupported)
 check_ipo_supported(RESULT ipo_supported OUTPUT ipo_error)
 if(ipo_supported)
