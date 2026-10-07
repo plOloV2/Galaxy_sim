@@ -8,17 +8,38 @@ bool alloc_StarData(StarData* data){
     if(data->N_stars < 2)
         return false;
 
-
-    _Float32** table[7] = {&data->pos_x, &data->pos_y, &data->pos_z, &data->v_x, &data->v_y, &data->v_z, &data->mass};
+    _Float32** table[NUM_TABLES] = {&data->pos_x, &data->pos_y, &data->pos_z, &data->v_x, &data->v_y, &data->v_z, &data->mass, &data->f_vec_x, &data->f_vec_y, &data->f_vec_z,};
 
     #ifndef NDEBUG
-        const char* names[7] = {"pos_x", "pos_y", "pos_z", "v_x", "v_y", "v_z", "mass"};
+        const char* names[NUM_TABLES] = {"pos_x", "pos_y", "pos_z", "v_x", "v_y", "v_z", "mass", "f_vec_x", "f_vec_y", "f_vec_z"};
     #endif
 
     size_t bytes_to_alloc = data->N_stars * sizeof(_Float32);
 
-    for(size_t i = 0; i < 7; i++) {
+    /** Allocating position, speed and mass tables. */
+    for(size_t i = 0; i < RAND_TABLES; i++) {
         *table[i] = malloc(bytes_to_alloc);
+        
+        if(*table[i] == NULL) {
+
+            #ifndef NDEBUG
+                fprintf(stderr, "ERROR: Alloc of %s failed.\n", names[i]);
+            #endif
+
+            // Free all previously successful allocations to prevent memory leaks
+            for(size_t j = 0; j < i; j++) {
+                free(*table[j]);
+                *table[j] = NULL;
+            }
+
+            return false;
+        }
+        
+    }
+
+    /** Allocating force vector tables to 0. */
+    for(size_t i = RAND_TABLES; i < NUM_TABLES; i++) {
+        *table[i] = calloc(data->N_stars, sizeof(_Float32));
         
         if(*table[i] == NULL) {
 
@@ -41,13 +62,16 @@ bool alloc_StarData(StarData* data){
 
 }
 
+/** union used to convert 64bit data into two 32bit chunks. */
 typedef union{
     uint64_t input;
     uint32_t output[2];
 } Conv;
 
+/** Fils  position, speed and mass tables with random _Float32 values. */
 void fill_StarData(StarData* data){
 
+    /** Uses Xoshiro256** for fast PRNG. */
     xoshiro256_state* Xos = xoshiro_init();
     if(Xos == NULL){
 
@@ -60,11 +84,11 @@ void fill_StarData(StarData* data){
     }
 
 
-    _Float32* table[7] = {data->pos_x, data->pos_y, data->pos_z, data->v_x, data->v_y, data->v_z, data->mass};
+    _Float32* table[RAND_TABLES] = {data->pos_x, data->pos_y, data->pos_z, data->v_x, data->v_y, data->v_z, data->mass};
     Conv raw_data;
     _Float32 scaler = MAX_START_POS;
 
-    for(size_t i = 0; i < 7; i++){
+    for(size_t i = 0; i < RAND_TABLES; i++){
 
         size_t iter = 0;
 
