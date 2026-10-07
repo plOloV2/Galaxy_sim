@@ -15,6 +15,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS   ON)
 set(sources_SRCS
     src/main.c
     src/create_StarData.c
+    src/basic_CPU/gravity_vector.c
 )
 
 # Include directories
@@ -22,6 +23,7 @@ set(include_DIRS
     inc
 )
 
+# Fetch PRNG lib
 include(FetchContent)
 FetchContent_Declare(
     nXoshiro256
@@ -29,6 +31,9 @@ FetchContent_Declare(
     GIT_TAG        main
 )
 FetchContent_MakeAvailable(nXoshiro256)
+
+# Incluce OpenMP
+find_package(OpenMP REQUIRED)
 
 # App version check
 add_custom_target(
@@ -46,8 +51,8 @@ add_custom_target(
 # Create an executable object type
 add_executable(${CMAKE_PROJECT_NAME} ${sources_SRCS})
 
-# Link the fetched library to your executable
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE nXoshiro256)
+# Link libraries to executable
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE nXoshiro256 OpenMP::OpenMP_C m)
 
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE 
@@ -59,7 +64,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
-# Error flags
+# Common C flags
 set(COMMON_FLAGS -Wall -Wextra -Werror -pipe)
 
 # Ensures the version header is generated before compilation
