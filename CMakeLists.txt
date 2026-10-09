@@ -16,6 +16,8 @@ set(sources_SRCS
     src/main.c
     src/create_StarData.c
     src/basic_CPU/gravity_vector.c
+    src/basic_CPU/multi_core.c
+    src/basic_CPU/single_core.c
 )
 
 # Include directories

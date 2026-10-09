@@ -2,6 +2,7 @@
 #define STAR_DATA_H
 
 #include <stdint.h>
+#include <stdlib.h>
 
 #define MAX_START_V    (_Float32)50
 #define MAX_START_POS  (_Float32)100
