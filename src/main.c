@@ -1,5 +1,7 @@
+#include <omp.h>
 #include <stdio.h>
 #include "version.h"
+#include "basic_CPU.h"
 #include "star_data.h"
 
 StarData Galaxy; 
@@ -27,5 +29,34 @@ int main(){
     fill_StarData(&Galaxy);
 
     printf("done\n");
+
+
+    void (*calculate)(StarData*) = &multi_core_basic; 
+
+
+    bool stop = false;
+    double time;
+
+    while(!stop){
+
+        time = omp_get_wtime();
+
+        calculate(&Galaxy);
+
+        time = omp_get_wtime() - time;
+
+        if(time < 1.0)
+        {
+            printf("Calculations took: %.3lfms.\n", time*1000);
+        } else
+        {
+            printf("Calculations took: %.3lfs.\n", time);
+        }
+
+        fflush(stdout);
+
+    }
+
+    return 0;
 
 }
