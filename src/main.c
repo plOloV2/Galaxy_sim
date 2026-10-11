@@ -1,7 +1,7 @@
 #include <omp.h>
 #include <stdio.h>
+#include "CPU.h"
 #include "version.h"
-#include "basic_CPU.h"
 #include "star_data.h"
 
 StarData Galaxy; 

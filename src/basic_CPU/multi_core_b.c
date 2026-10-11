@@ -1,9 +1,20 @@
 #include "star_data.h"
-#include "basic_CPU.h"
+#include <string.h>
+#include <omp.h>
 
 
-void single_core_basic(StarData* Galaxy){
+void g_force_vec(
+    _Float32 x1, _Float32 x2,
+    _Float32 y1, _Float32 y2,
+    _Float32 z1, _Float32 z2,
+    _Float32 m1, _Float32 m2,
+    _Float32* f_vec_x, _Float32* f_vec_y, _Float32* f_vec_z
+);
 
+
+void multi_core_basic(StarData* Galaxy){
+
+    #pragma omp parallel for schedule(static, 64)
     for(uint32_t i = 0; i < Galaxy->N_stars; i++){
 
         Galaxy->f_vec_x[i] = 0.0f;
@@ -15,7 +26,13 @@ void single_core_basic(StarData* Galaxy){
             if(j == i)
                 continue;
 
-            g_force_vec(Galaxy->pos_x[i], Galaxy->pos_x[j], Galaxy->pos_y[i], Galaxy->pos_y[j], Galaxy->pos_z[i], Galaxy->pos_z[j], Galaxy->mass[i], Galaxy->mass[j], &Galaxy->f_vec_x[i], &Galaxy->f_vec_y[i], &Galaxy->f_vec_z[i]);
+            g_force_vec(
+                Galaxy->pos_x[i], Galaxy->pos_x[j],
+                Galaxy->pos_y[i], Galaxy->pos_y[j],
+                Galaxy->pos_z[i], Galaxy->pos_z[j],
+                Galaxy->mass[i], Galaxy->mass[j],
+                &Galaxy->f_vec_x[i], &Galaxy->f_vec_y[i], &Galaxy->f_vec_z[i]
+            );
 
         }
 
@@ -27,6 +44,7 @@ void single_core_basic(StarData* Galaxy){
 
     }
 
+    #pragma omp parallel for schedule(static, 64)
     for(uint32_t i = 0; i < Galaxy->N_stars; i++){
         
         Galaxy->pos_x[i] += Galaxy->v_x[i];

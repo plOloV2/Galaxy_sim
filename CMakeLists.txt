@@ -15,9 +15,12 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS   ON)
 set(sources_SRCS
     src/main.c
     src/create_StarData.c
-    src/basic_CPU/gravity_vector.c
-    src/basic_CPU/multi_core.c
-    src/basic_CPU/single_core.c
+    src/basic_CPU/gravity_vector_b.c
+    src/basic_CPU/multi_core_b.c
+    src/basic_CPU/single_core_b.c
+    src/SIMD_CPU/gravity_vector_s.c
+    src/SIMD_CPU/multi_core_s.c
+    src/SIMD_CPU/single_core_s.c
 )
 
 # Include directories
@@ -85,5 +88,5 @@ endif()
 target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE 
     ${COMMON_FLAGS}
     $<$<CONFIG:Debug>:-Og -ggdb3> 
-    $<$<CONFIG:Release>:-O3 -DNDEBUG -fomit-frame-pointer>
+    $<$<CONFIG:Release>:-O3 -DNDEBUG -fomit-frame-pointer -march=native>
 )
