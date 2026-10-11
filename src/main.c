@@ -28,11 +28,53 @@ int main(){
 
     fill_StarData(&Galaxy);
 
-    printf("done\n");
+    printf("done\n\nWhich algorithm would you like to run:\n");
+    printf("1. Single thread\n");
+    printf("2. Single thread SIMD\n");
+    printf("3. Multi thread\n");
+    printf("4. Multi thread SIMD\n");
+    printf("5. GPU\n");
+    printf("Your choice: ");
+
+    uint32_t choice = 0;
+    scanf("%u", &choice);
 
 
-    void (*calculate)(StarData*) = &multi_core_basic; 
+    void (*calculate)(StarData*) = &multi_core_basic;
 
+    switch(choice){
+        case 1:
+            printf("\nYou have choosen Single threaded version.\n");
+            calculate = &single_core_basic;
+            break;
+
+        case 2:
+            printf("\nYou have choosen Single threaded with SIMD version.\n");
+            calculate = &single_core_simd;
+            break;
+
+        case 3:
+            printf("\nYou have choosen Multi threaded version.\n");
+            calculate = &multi_core_basic;
+            break;
+
+        case 4:
+            printf("\nYou have choosen Multi threaded with SIMD version.\n");
+            calculate = &multi_core_simd;
+            break;
+
+        case 5:
+            printf("\nYou have choosen GPU version.\n");
+            // calculate = &single_core_simd;
+            fprintf(stderr, "ERROR: Not implemented yet, running single thread version.");
+            break;
+
+        default:
+            fprintf(stderr, "ERROR: Incorect option choosen, closing program...");
+            return 1;
+
+    }
+ 
 
     bool stop = false;
     double time;
