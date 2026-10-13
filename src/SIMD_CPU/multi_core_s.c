@@ -66,10 +66,6 @@ void multi_core_simd(StarData* Galaxy){
 
         }
 
-        Galaxy->f_vec_x[i] = fx;
-        Galaxy->f_vec_y[i] = fy;
-        Galaxy->f_vec_z[i] = fz;
-
         _Float32 mass_over = 1.0f / m1;
 
         Galaxy->v_x[i] += fx * mass_over;

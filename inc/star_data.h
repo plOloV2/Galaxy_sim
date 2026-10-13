@@ -21,13 +21,9 @@ typedef struct {
     _Float32* v_y;
     _Float32* v_z;
     _Float32* mass;
-    _Float32* f_vec_x;
-    _Float32* f_vec_y;
-    _Float32* f_vec_z;
 } StarData;
 
-#define NUM_TABLES 10                   /** Update this value to match number of tables in StarData struct. */
-#define RAND_TABLES (NUM_TABLES - 3)    /** All tables need random data on start exept for force vectors. */
+#define NUM_TABLES 7                   /** Update this value to match number of tables in StarData struct. */
 
 bool alloc_StarData(StarData* data);
 
