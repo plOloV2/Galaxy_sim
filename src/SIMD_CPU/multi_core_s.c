@@ -2,6 +2,9 @@
 #include <omp.h>
 
 
+#define PACKAGE_SIZE 64
+
+
 void g_force_vec(
     _Float32 x1, _Float32 x2,
     _Float32 y1, _Float32 y2,
@@ -24,7 +27,7 @@ void g_force_vec_avx2(
 
 void multi_core_simd(StarData* Galaxy){
 
-    #pragma omp parallel for schedule(static, 64)
+    #pragma omp parallel for schedule(static, PACKAGE_SIZE)
     for(uint32_t i = 0; i < Galaxy->N_stars; i++){
 
         _Float32 fx = 0.0f;
@@ -74,7 +77,7 @@ void multi_core_simd(StarData* Galaxy){
 
     }
 
-    #pragma omp parallel for schedule(static, 64)
+    #pragma omp parallel for schedule(static, PACKAGE_SIZE)
     for(uint32_t i = 0; i < Galaxy->N_stars; i++){
         
         Galaxy->pos_x[i] += Galaxy->v_x[i];
