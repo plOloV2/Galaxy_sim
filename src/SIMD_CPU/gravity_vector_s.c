@@ -1,7 +1,7 @@
 #include <immintrin.h>
 #include "const.h"
 
-/** Helper: Horizontal sum of 8 _Float32 lanes in a __m256 register. */
+/** Horizontal sum of 8 _Float32 lanes in a __m256 register. */
 static inline _Float32 hsum256_ps(__m256 v){
 
     __m128 vlow  = _mm256_castps256_ps128(v);
@@ -18,11 +18,7 @@ static inline _Float32 hsum256_ps(__m256 v){
 
 }
 
-/**
- * AVX2 SIMD version of g_force_vec().
- * Calculates gravity force vector for 1 star (x1, y1, z1, m1) from 8 stars (x2..m2).
- * Thread-safe and reentrant.
- */
+/** Calculates gravity force vector for 1 star (x1, y1, z1, m1) from 8 stars (x2..m2). */
 void g_force_vec_avx2(
     _Float32 x1, const _Float32 x2[static 8],
     _Float32 y1, const _Float32 y2[static 8],
@@ -81,4 +77,5 @@ void g_force_vec_avx2(
     *f_vec_x += hsum256_ps(vdx);
     *f_vec_y += hsum256_ps(vdy);
     *f_vec_z += hsum256_ps(vdz);
+    
 }
