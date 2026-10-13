@@ -61,7 +61,10 @@
     },
     {
       "name": "Release_ICX",
-      "inherits": ["ICX", "type-release"]
+      "inherits": ["ICX", "type-release"],
+      "cacheVariables": {
+        "OMP_GPU_BACKEND": "INTEL"
+      }
     }
   ],
   "buildPresets": [

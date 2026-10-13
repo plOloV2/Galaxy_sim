@@ -1,5 +1,6 @@
 #include "star_data.h"
 #include "const.h"
+#include <math.h>
 #include <omp.h>
 
 

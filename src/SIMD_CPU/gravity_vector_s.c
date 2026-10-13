@@ -2,7 +2,7 @@
 #include "const.h"
 
 /** Horizontal sum of 8 _Float32 lanes in a __m256 register. */
-static inline _Float32 hsum256_ps(__m256 v){
+_Float32 hsum256_ps(__m256 v){
 
     __m128 vlow  = _mm256_castps256_ps128(v);
     __m128 vhigh = _mm256_extractf128_ps(v, 1);
@@ -24,9 +24,7 @@ void g_force_vec_avx2(
     _Float32 y1, const _Float32 y2[static 8],
     _Float32 z1, const _Float32 z2[static 8],
     _Float32 m1, const _Float32 m2[static 8],
-    _Float32* restrict f_vec_x,
-    _Float32* restrict f_vec_y,
-    _Float32* restrict f_vec_z )
+    __m256* f_vec_x, __m256* f_vec_y, __m256* f_vec_z)
 {
 
     /** Broadcast star1 parameters across 8 lanes. */
@@ -73,9 +71,19 @@ void g_force_vec_avx2(
     vdy = _mm256_mul_ps(vdy, vg);
     vdz = _mm256_mul_ps(vdz, vg);
 
-    /** Fuse vector with previous results. */
-    *f_vec_x += hsum256_ps(vdx);
-    *f_vec_y += hsum256_ps(vdy);
-    *f_vec_z += hsum256_ps(vdz);
+    // Read the pointers once
+    __m256 local_fx = *f_vec_x;
+    __m256 local_fy = *f_vec_y;
+    __m256 local_fz = *f_vec_z;
+
+    // Use FMA to accumulate directly into the local YMM registers
+    local_fx = _mm256_fmadd_ps(vdx, vg, local_fx);
+    local_fy = _mm256_fmadd_ps(vdy, vg, local_fy);
+    local_fz = _mm256_fmadd_ps(vdz, vg, local_fz);
+
+    // Write back exactly once at the end
+    *f_vec_x = local_fx;
+    *f_vec_y = local_fy;
+    *f_vec_z = local_fz;
     
 }
