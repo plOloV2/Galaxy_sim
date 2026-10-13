@@ -4,6 +4,10 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+/** Ensure _Float32 is 32bit. */
+static_assert(sizeof(_Float32) == 4);
+
+
 #define MAX_START_V    (_Float32)50
 #define MAX_START_POS  (_Float32)100
 #define MAX_START_MASS (_Float32)200

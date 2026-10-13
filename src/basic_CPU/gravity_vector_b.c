@@ -1,6 +1,4 @@
 #include <math.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include "const.h"
 
 /** Calculates gravity force vector for star1 from star2. */
