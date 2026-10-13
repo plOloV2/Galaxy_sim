@@ -1,5 +1,5 @@
-#ifndef BASIC_CPU_H
-#define BASIC_CPU_H
+#ifndef BACKEND_H
+#define BACKEND_H
 
 #include <stdlib.h>
 #include "star_data.h"
@@ -9,5 +9,7 @@ void single_core_basic(StarData* Galaxy);
 
 void multi_core_simd(StarData* Galaxy);
 void single_core_simd(StarData* Galaxy);
+
+void gpu_openmp(StarData* Galaxy);
 
 #endif
