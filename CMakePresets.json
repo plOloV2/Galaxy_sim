@@ -7,6 +7,7 @@
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/build/${presetName}",
       "cacheVariables": {
+        "OMP_GPU_BACKEND": "NONE",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
       }
     },
@@ -60,7 +61,10 @@
     },
     {
       "name": "Release_ICX",
-      "inherits": ["ICX", "type-release"]
+      "inherits": ["ICX", "type-release"],
+      "cacheVariables": {
+        "OMP_GPU_BACKEND": "INTEL"
+      }
     }
   ],
   "buildPresets": [

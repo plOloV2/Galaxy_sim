@@ -1,6 +1,6 @@
 #include <omp.h>
 #include <stdio.h>
-#include "CPU.h"
+#include "backend.h"
 #include "version.h"
 #include "star_data.h"
 
@@ -33,7 +33,12 @@ int main(){
     printf("2. Single thread SIMD\n");
     printf("3. Multi thread\n");
     printf("4. Multi thread SIMD\n");
-    printf("5. GPU\n");
+    printf("5. GPU CUDA\n");
+    
+    #ifdef OPENMP_GPU
+        printf("6. GPU OpenMP (%s)\n", OPEN_MP_VENDOR);
+    #endif
+
     printf("Your choice: ");
 
     uint32_t choice = 0;
@@ -68,6 +73,13 @@ int main(){
             // calculate = &single_core_simd;
             fprintf(stderr, "ERROR: Not implemented yet, running single thread version.");
             break;
+
+        #ifdef OPENMP_GPU
+        case 6:
+            printf("\nYou have choosen OpenMP GPU version (%s).\n", OPEN_MP_VENDOR);
+            calculate = &gpu_openmp;
+            break;
+        #endif
 
         default:
             fprintf(stderr, "ERROR: Incorect option choosen, closing program...");
