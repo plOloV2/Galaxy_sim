@@ -8,7 +8,7 @@ void multi_core_simd(StarData* Galaxy){
     uint32_t N = Galaxy->N_stars;
 
     
-    #pragma omp parallel for schedule(static)
+    #pragma omp parallel for schedule(guided, 64)
     for(uint32_t i = 0; i < N; i++){
         
         // Local accumulators 
@@ -46,7 +46,7 @@ void multi_core_simd(StarData* Galaxy){
 
     }
 
-    #pragma omp parallel for schedule(static)
+    #pragma omp parallel for schedule(guided, 64)
     for(uint32_t i = 0; i < N; i++){
 
         Galaxy->pos_x[i] += Galaxy->v_x[i];
