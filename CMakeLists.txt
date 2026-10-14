@@ -18,10 +18,9 @@ set(COMMON_FLAGS -Wall -Wextra -Werror -pipe -march=native)
 set(sources_SRCS
     src/main.c
     src/create_StarData.c
-    src/basic_CPU/gravity_vector_b.c
+    src/basic_CPU/gravity_vector.c
     src/basic_CPU/multi_core_b.c
     src/basic_CPU/single_core_b.c
-    src/SIMD_CPU/gravity_vector_s.c
     src/SIMD_CPU/multi_core_s.c
     src/SIMD_CPU/single_core_s.c
 )
