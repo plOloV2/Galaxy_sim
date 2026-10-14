@@ -1,16 +1,34 @@
 #include <omp.h>
 #include <stdio.h>
+#include <string.h>
 #include "backend.h"
 #include "version.h"
 #include "star_data.h"
 
+bool run_test_mode(int size_count, char* size_args[]);
+
 StarData Galaxy; 
 
-int main(){
+int main(int argc, char* argv[]){
 
     #ifndef NDEBUG
         printf("Current version: %s\n", APP_VERSION);
     #endif
+
+    if(argc > 1 && strcmp(argv[1], "test") == 0)
+    {
+
+        if(!run_test_mode(argc - 2, &argv[2]))
+        {
+
+            fprintf(stderr, "ERROR: Test mode execution failed.\n");
+            return 1;
+
+        }
+
+        return 0;
+
+    }
 
     printf("How big should the Galaxy be?\n");
 

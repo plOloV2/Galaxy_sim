@@ -26,6 +26,7 @@ set(sources_SRCS
     src/basic_CPU/single_core_b.c
     src/SIMD_CPU/multi_core_s.c
     src/SIMD_CPU/single_core_s.c
+    src/test_run.c
 )
 
 
