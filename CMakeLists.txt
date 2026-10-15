@@ -66,7 +66,7 @@ endif()
 # Compilation flags that depend on config
 target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE 
     ${COMMON_FLAGS}
-    $<$<CONFIG:Debug>:-Og -ggdb3> 
+    $<$<CONFIG:Debug>:-Og -ggdb3 -Wno-error=pass-failed> 
     $<$<CONFIG:Release>:-O3 -DNDEBUG -fomit-frame-pointer>
 )
 

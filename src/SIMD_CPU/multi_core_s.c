@@ -22,7 +22,7 @@ void multi_core_simd(StarData* Galaxy){
         _Float32 m1 = Galaxy->mass[i];
 
         // Tell the CPU compiler to explicitly SIMD vectorize this branchless loop
-        #pragma omp simd
+        #pragma omp simd reduction(+:local_fx, local_fy, local_fz)
         for(uint32_t j = 0; j < N; j++){
 
             _Float32 dx = Galaxy->pos_x[j] - x1;

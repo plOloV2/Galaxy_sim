@@ -1,5 +1,4 @@
 /build
 Galaxy_sim
 inc/version.h
-benchmark_passes.csv
-benchmark_summary.csv
+*.csv
