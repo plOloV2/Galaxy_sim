@@ -30,6 +30,7 @@ static const AlgorithmEntry ALGORITHMS[] = {
     {"multi_core_simd",   &multi_core_simd},
 #ifdef OPENMP_GPU
     {"gpu_openmp",        &gpu_openmp},
+    {"hybrid_openmp",     &hybrid},
 #endif
 #ifdef CUDA_GPU
     {"gpu_cuda",          &},

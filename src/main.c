@@ -55,6 +55,7 @@ int main(int argc, char* argv[]){
     
     #ifdef OPENMP_GPU
         printf("6. GPU OpenMP (%s)\n", OPEN_MP_VENDOR);
+        printf("7. Hybrid OpenMP CPU + GPU (%s)\n", OPEN_MP_VENDOR);
     #endif
 
     printf("Your choice: ");
@@ -96,6 +97,11 @@ int main(int argc, char* argv[]){
         case 6:
             printf("\nYou have choosen OpenMP GPU version (%s).\n", OPEN_MP_VENDOR);
             calculate = &gpu_openmp;
+            break;
+
+        case 7:
+            printf("\nYou have choosen OpenMP Hybrid CPU + GPU version (%s).\n", OPEN_MP_VENDOR);
+            calculate = &hybrid;
             break;
         #endif
 

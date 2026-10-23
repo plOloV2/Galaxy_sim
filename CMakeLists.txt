@@ -17,7 +17,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS   ON)
 set(COMMON_FLAGS -Wall -Wextra -Werror -pipe -march=native)
 
 
-# Sources
+# Sources (OMP_GPU_SRCS is automatically populated only by toolchain-icx.cmake)
 set(sources_SRCS
     src/main.c
     src/create_StarData.c
@@ -27,19 +27,8 @@ set(sources_SRCS
     src/SIMD_CPU/multi_core_s.c
     src/SIMD_CPU/single_core_s.c
     src/test_run.c
+    ${OMP_GPU_SRCS}
 )
-
-
-# OpenMP GPU backed selection
-set(OMP_GPU_BACKEND "NONE" CACHE STRING "Target GPU backend for OpenMP offloading")
-set_property(CACHE OMP_GPU_BACKEND PROPERTY STRINGS "NONE" "NVIDIA" "AMD" "INTEL")
-
-
-# Conditionally add GPU source
-if(NOT OMP_GPU_BACKEND STREQUAL "NONE")
-    list(APPEND sources_SRCS src/OpenMP_GPU/gravity_vector_b.c)
-    message(STATUS "Building with OpenMP GPU Backend: ${OMP_GPU_BACKEND}")
-endif()
 
 
 # Include directories
@@ -63,36 +52,17 @@ else()
 endif()
 
 
-# Compilation flags that depend on config
+# Compilation flags, definitions, and link flags (OMP_* expand only when set by toolchain)
+target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE ${OMP_GPU_DEFINITIONS})
+
 target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE 
     ${COMMON_FLAGS}
+    ${OMP_OFFLOAD_COMPILE_FLAGS}
     $<$<CONFIG:Debug>:-Og -ggdb3 -Wno-error=pass-failed> 
     $<$<CONFIG:Release>:-O3 -DNDEBUG -fomit-frame-pointer>
 )
 
-
-# OpenMP GPU backed config
-if(NOT OMP_GPU_BACKEND STREQUAL "NONE")
-    # Adds #define OPENMP_GPU and #define OPEN_MP_VENDOR="X" to your C code
-    target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE 
-        OPENMP_GPU 
-        OPEN_MP_VENDOR="${OMP_GPU_BACKEND}"
-    )
-    
-    # Read the dynamic variables populated by the selected toolchain file
-    if(OMP_GPU_BACKEND STREQUAL "NVIDIA" AND DEFINED OMP_OFFLOAD_NVIDIA_COMPILE)
-        target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE ${OMP_OFFLOAD_NVIDIA_COMPILE})
-        target_link_options(${CMAKE_PROJECT_NAME} PRIVATE ${OMP_OFFLOAD_NVIDIA_LINK})
-    elseif(OMP_GPU_BACKEND STREQUAL "AMD" AND DEFINED OMP_OFFLOAD_AMD_COMPILE)
-        target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE ${OMP_OFFLOAD_AMD_COMPILE})
-        target_link_options(${CMAKE_PROJECT_NAME} PRIVATE ${OMP_OFFLOAD_AMD_LINK})
-    elseif(OMP_GPU_BACKEND STREQUAL "INTEL" AND DEFINED OMP_OFFLOAD_INTEL_COMPILE)
-        target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE ${OMP_OFFLOAD_INTEL_COMPILE})
-        target_link_options(${CMAKE_PROJECT_NAME} PRIVATE ${OMP_OFFLOAD_INTEL_LINK})
-    else()
-        message(WARNING "The current compiler toolchain may not support offloading to ${OMP_GPU_BACKEND}.")
-    endif()
-endif()
+target_link_options(${CMAKE_PROJECT_NAME} PRIVATE ${OMP_OFFLOAD_LINK_FLAGS})
 
 
 # Fetch PRNG lib
@@ -105,7 +75,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(nXoshiro256)
 
 
-# Incluce OpenMP
+# Include OpenMP
 find_package(OpenMP REQUIRED)
 
 
