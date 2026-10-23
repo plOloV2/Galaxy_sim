@@ -3,7 +3,6 @@ set(CMAKE_C_COMPILER icx)
 # Include OpenMP GPU & Hybrid sources
 set(OMP_GPU_SRCS
     src/OpenMP_GPU/gravity_vector_b.c
-    src/Hybrid/hybrid.c
 )
 
 # Preprocessor definitions for C code
