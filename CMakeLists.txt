@@ -58,7 +58,7 @@ target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE ${OMP_GPU_DEFINITIONS})
 target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE 
     ${COMMON_FLAGS}
     ${OMP_OFFLOAD_COMPILE_FLAGS}
-    $<$<CONFIG:Debug>:-Og -ggdb3 -Wno-error=pass-failed> 
+    $<$<CONFIG:Debug>:-O2 -ggdb3 -Wno-error=pass-failed> 
     $<$<CONFIG:Release>:-O3 -DNDEBUG -fomit-frame-pointer>
 )
 

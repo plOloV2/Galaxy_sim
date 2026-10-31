@@ -1,13 +1,33 @@
 #include <omp.h>
+#include <errno.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 #include "backend.h"
 #include "version.h"
 #include "star_data.h"
 
-bool run_test_mode(int size_count, char* size_args[]);
+bool run_test_mode(int size_count, char* size_args[], uint64_t seed);
 
 StarData Galaxy; 
+
+static bool parse_seed(const char* arg, uint64_t* out_seed){
+
+    if(arg == nullptr || arg[0] == '\0' || arg[0] == '-')
+        return false;
+
+    errno = 0;
+    char* endptr = nullptr;
+    unsigned long long val = strtoull(arg, &endptr, 10);
+
+    if(endptr == arg || *endptr != '\0' || errno == ERANGE || val == 0)
+        return false;
+
+    *out_seed = (uint64_t)val;
+    return true;
+
+}
 
 int main(int argc, char* argv[]){
 
@@ -15,10 +35,47 @@ int main(int argc, char* argv[]){
         printf("Current version: %s\n", APP_VERSION);
     #endif
 
-    if(argc > 1 && strcmp(argv[1], "test") == 0)
+    bool test_mode = false;
+    uint64_t seed = 0;
+    int size_count = 0;
+
+    for(int i = 1; i < argc; i++){
+
+        if(strcmp(argv[i], "-t") == 0 || strcmp(argv[i], "--test") == 0)
+        {
+            test_mode = true;
+        }
+        else if(strcmp(argv[i], "-s") == 0 || strcmp(argv[i], "--seed") == 0)
+        {
+            if(i + 1 >= argc)
+            {
+                fprintf(stderr, "ERROR: Missing seed value after '%s'.\n", argv[i]);
+                return 1;
+            }
+
+            if(!parse_seed(argv[++i], &seed))
+            {
+                fprintf(stderr, "ERROR: Invalid seed value '%s' (must be an integer > 0).\n", argv[i]);
+                return 1;
+            }
+        }
+        else if(argv[i][0] == '-')
+        {
+            fprintf(stderr, "ERROR: Unknown option '%s'.\n", argv[i]);
+            return 1;
+        }
+        else
+        {
+            argv[1 + size_count] = argv[i];
+            size_count++;
+        }
+
+    }
+
+    if(test_mode)
     {
 
-        if(!run_test_mode(argc - 2, &argv[2]))
+        if(!run_test_mode(size_count, &argv[1], seed))
         {
 
             fprintf(stderr, "ERROR: Test mode execution failed.\n");
@@ -28,6 +85,11 @@ int main(int argc, char* argv[]){
 
         return 0;
 
+    }
+    else if(size_count > 0)
+    {
+        fprintf(stderr, "ERROR: Unexpected argument '%s' without -t/--test.\n", argv[1]);
+        return 1;
     }
 
     printf("How big should the Galaxy be?\n");
@@ -44,7 +106,13 @@ int main(int argc, char* argv[]){
         printf("\nAlloc done.");
     #endif
 
-    fill_StarData(&Galaxy);
+    #ifndef NDEBUG
+        if(seed != 0)
+        {
+            printf("Using user seed: %zu\n", seed);
+        }
+    #endif
+    fill_StarData(&Galaxy, seed);
 
     printf("done\n\nWhich algorithm would you like to run:\n");
     printf("1. Single thread\n");

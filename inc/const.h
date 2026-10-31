@@ -2,7 +2,7 @@
 #define CONST_H
 
 
-#define G_const (_Float32)(6.674e-11)   /** Real value, propably will be too weak. */
+#define G_const (_Float32)(6.674e-3)   /** Real value, propably will be too weak. */
 #define DIST_BARIER (_Float32)(1.0e-2)  /** Prevents distance from beeing zero. */
 
 

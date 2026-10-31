@@ -47,11 +47,11 @@ typedef union{
     uint32_t output[2];
 } Conv;
 
-/** Fils  position, speed and mass tables with random _Float32 values. */
-void fill_StarData(StarData* data){
+/** Fills position, speed and mass tables with random _Float32 values. */
+void fill_StarData(StarData* data, uint64_t seed){
 
     /** Uses Xoshiro256** for fast PRNG. */
-    xoshiro256_state* Xos = xoshiro_init();
+    xoshiro256_state* Xos = xoshiro_init(seed);
     if(Xos == NULL){
 
         #ifndef NDEBUG

@@ -163,12 +163,12 @@ static void copy_StarData(StarData* dst, const StarData* src){
 }
 
 
-bool run_test_mode(int size_count, char* size_args[]){
+bool run_test_mode(int size_count, char* size_args[], uint64_t seed){
 
     if(size_count < 1)
     {
 
-        fprintf(stderr, "ERROR: No Galaxy sizes provided after 'test'.\n");
+        fprintf(stderr, "ERROR: No Galaxy sizes provided for test mode (-t/--test).\n");
         return false;
 
     }
@@ -255,7 +255,7 @@ bool run_test_mode(int size_count, char* size_args[]){
 
         }
 
-        fill_StarData(&datasets[i]);
+        fill_StarData(&datasets[i], seed);
         printf("done\n");
 
     }

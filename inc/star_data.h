@@ -27,6 +27,6 @@ typedef struct {
 
 bool alloc_StarData(StarData* data);
 
-void fill_StarData(StarData* data);
+void fill_StarData(StarData* data, uint64_t seed);
 
 #endif 
