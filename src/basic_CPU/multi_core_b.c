@@ -22,9 +22,6 @@ void multi_core_basic(StarData* Galaxy){
 
         for(uint32_t j = 0; j < Galaxy->N_stars; j++){
 
-            if(j == i)
-                continue;
-
             g_force_vec(
                 Galaxy->pos_x[i], Galaxy->pos_x[j],
                 Galaxy->pos_y[i], Galaxy->pos_y[j],
