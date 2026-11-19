@@ -32,7 +32,7 @@ static const AlgorithmEntry ALGORITHMS[] = {
     {"gpu_openmp",        &gpu_openmp},
 #endif
 #ifdef CUDA_GPU
-    {"gpu_cuda",          &},
+    {"gpu_cuda",          &gpu_cuda},
 #endif
 };
 

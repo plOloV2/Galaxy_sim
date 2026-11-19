@@ -30,6 +30,15 @@ set(sources_SRCS
     ${OMP_GPU_SRCS}
 )
 
+option(ENABLE_CUDA "Build CUDA backend" OFF)
+if(ENABLE_CUDA)
+    enable_language(CUDA)
+    set(CMAKE_CUDA_STANDARD 17)
+    if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
+        set(CMAKE_CUDA_ARCHITECTURES native)
+    endif()
+    list(APPEND sources_SRCS src/CUDA_GPU/gravity_cuda.cu)
+endif()
 
 # Include directories
 set(include_DIRS
@@ -53,13 +62,15 @@ endif()
 
 
 # Compilation flags, definitions, and link flags (OMP_* expand only when set by toolchain)
-target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE ${OMP_GPU_DEFINITIONS})
+target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE ${OMP_GPU_DEFINITIONS}
+    $<$<BOOL:${ENABLE_CUDA}>:CUDA_GPU>)
 
-target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE 
-    ${COMMON_FLAGS}
-    ${OMP_OFFLOAD_COMPILE_FLAGS}
-    $<$<CONFIG:Debug>:-O2 -ggdb3> 
-    $<$<CONFIG:Release>:-O3 -DNDEBUG -fomit-frame-pointer>
+target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE
+    $<$<COMPILE_LANGUAGE:C>:${COMMON_FLAGS}>
+    $<$<COMPILE_LANGUAGE:C>:${OMP_OFFLOAD_COMPILE_FLAGS}>
+    $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:Debug>>:-O2 -ggdb3>
+    $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:Release>>:-O3 -DNDEBUG -fomit-frame-pointer>
+    $<$<AND:$<COMPILE_LANGUAGE:CUDA>,$<CONFIG:Release>>:-O3>
 )
 
 target_link_options(${CMAKE_PROJECT_NAME} PRIVATE ${OMP_OFFLOAD_LINK_FLAGS})

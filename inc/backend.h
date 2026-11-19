@@ -12,4 +12,8 @@ void single_core_simd(StarData* Galaxy);
 
 void gpu_openmp(StarData* Galaxy);
 
+#ifdef CUDA_GPU
+void gpu_cuda(StarData* Galaxy);
+#endif
+
 #endif

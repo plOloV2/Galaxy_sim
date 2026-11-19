@@ -155,9 +155,13 @@ int main(int argc, char* argv[]){
             break;
 
         case 5:
-            printf("\nYou have choosen GPU version.\n");
+            #ifdef CUDA_GPU
+                printf("\nYou have choosen GPU CUDA version.\n");
+                calculate = &gpu_cuda;
+            #else
+                fprintf(stderr, "ERROR: Not implemented yet, running single thread version.");
+            #endif
             // calculate = &single_core_simd;
-            fprintf(stderr, "ERROR: Not implemented yet, running single thread version.");
             break;
 
         #ifdef OPENMP_GPU
