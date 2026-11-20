@@ -7,6 +7,9 @@
 void multi_core_basic(StarData* Galaxy);
 void single_core_basic(StarData* Galaxy);
 
+void multi_core_naive(StarData* Galaxy);
+void single_core_naive(StarData* Galaxy);
+
 void multi_core_simd(StarData* Galaxy);
 void single_core_simd(StarData* Galaxy);
 

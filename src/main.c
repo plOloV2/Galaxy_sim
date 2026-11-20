@@ -115,14 +115,16 @@ int main(int argc, char* argv[]){
     fill_StarData(&Galaxy, seed);
 
     printf("done\n\nWhich algorithm would you like to run:\n");
-    printf("1. Single thread\n");
-    printf("2. Single thread SIMD\n");
-    printf("3. Multi thread\n");
-    printf("4. Multi thread SIMD\n");
-    printf("5. GPU CUDA\n");
+    printf("1. Single thread (basic)\n");
+    printf("2. Single thread (naive)\n");
+    printf("3. Single thread SIMD\n");
+    printf("4. Multi thread (basic)\n");
+    printf("5. Multi thread (naive)\n");
+    printf("6. Multi thread SIMD\n");
+    printf("7. GPU CUDA\n");
     
     #ifdef OPENMP_GPU
-        printf("6. GPU OpenMP (%s)\n", OPEN_MP_VENDOR);
+        printf("8. GPU OpenMP (%s)\n", OPEN_MP_VENDOR);
     #endif
 
     printf("Your choice: ");
@@ -135,33 +137,43 @@ int main(int argc, char* argv[]){
 
     switch(choice){
         case 1:
-            printf("\nYou have choosen Single threaded version.\n");
+            printf("\nYou have choosen Single threaded (basic) version.\n");
             calculate = &single_core_basic;
             break;
 
         case 2:
+            printf("\nYou have choosen Single threaded (naive) version.\n");
+            calculate = &single_core_naive;
+            break;
+
+        case 3:
             printf("\nYou have choosen Single threaded with SIMD version.\n");
             calculate = &single_core_simd;
             break;
 
-        case 3:
-            printf("\nYou have choosen Multi threaded version.\n");
+        case 4:
+            printf("\nYou have choosen Multi threaded (basic) version.\n");
             calculate = &multi_core_basic;
             break;
 
-        case 4:
+        case 5:
+            printf("\nYou have choosen Multi threaded (naive) version.\n");
+            calculate = &multi_core_naive;
+            break;
+
+        case 6:
             printf("\nYou have choosen Multi threaded with SIMD version.\n");
             calculate = &multi_core_simd;
             break;
 
-        case 5:
+        case 7:
             printf("\nYou have choosen GPU version.\n");
             // calculate = &single_core_simd;
             fprintf(stderr, "ERROR: Not implemented yet, running single thread version.");
             break;
 
         #ifdef OPENMP_GPU
-        case 6:
+        case 8:
             printf("\nYou have choosen OpenMP GPU version (%s).\n", OPEN_MP_VENDOR);
             calculate = &gpu_openmp;
             break;

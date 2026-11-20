@@ -24,6 +24,8 @@ set(sources_SRCS
     src/basic_CPU/gravity_vector.c
     src/basic_CPU/multi_core_b.c
     src/basic_CPU/single_core_b.c
+    src/naive_CPU/multi_core_n.c
+    src/naive_CPU/single_core_n.c
     src/SIMD_CPU/multi_core_s.c
     src/SIMD_CPU/single_core_s.c
     src/test_run.c
