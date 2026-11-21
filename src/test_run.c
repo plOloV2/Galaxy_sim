@@ -25,8 +25,10 @@ typedef struct {
 
 static const AlgorithmEntry ALGORITHMS[] = {
     {"basic_cpu",         &single_core_basic},
+    {"single_core_naive", &single_core_naive},
     {"single_core_simd",  &single_core_simd},
     {"multi_core_basic",  &multi_core_basic},
+    {"multi_core_naive",  &multi_core_naive},
     {"multi_core_simd",   &multi_core_simd},
 #ifdef OPENMP_GPU
     {"gpu_openmp",        &gpu_openmp},
