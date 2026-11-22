@@ -166,7 +166,7 @@ int main(int argc, char* argv[]){
             calculate = &multi_core_simd;
             break;
 
-        case 5:
+        case 7:
             #ifdef CUDA_GPU
                 printf("\nYou have choosen GPU CUDA version.\n");
                 calculate = &gpu_cuda;
