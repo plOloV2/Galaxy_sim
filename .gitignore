@@ -2,3 +2,8 @@
 Galaxy_sim
 inc/version.h
 *.csv
+
+#  NVIDIA Nsight Systems raports
+*.nsys-rep
+*.sqlite
+*.qdstrm
